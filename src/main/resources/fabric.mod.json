@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "servermessages",
+  "version": "${version}",
+  "name": "Server Messages",
+  "description": "",
+  "authors": [
+    "arvitus"
+  ],
+  "contact": {
+    "issues": "https://github.com/arvitus/ServerMessages",
+    "sources": "https://github.com/arvitus/ServerMessages"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "de.example.servermessages.ServerMessages"
+    ]
+  },
+  "mixins": [
+    "servermessages.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

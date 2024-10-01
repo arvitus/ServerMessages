@@ -1,0 +1,84 @@
+{
+  "multiplayer": {
+    "disconnect": {
+      "server_shutdown": {
+        "#mixins": [
+          "PlayerManager::disconnectAllPlayers",
+          "ClientConnection::channelRead0"
+        ],
+        "#context": "player"
+      },
+      "not_whitelisted": {
+        "#mixins": [
+          "PlayerManager::checkCanJoin/profile",
+          "MinecraftServer::kickNonWhitelistedPlayers/player"
+        ],
+        "#context": "profile"
+      },
+      "kicked": {
+        "#mixin": "KickCommand::execute",
+        "#context": "player"
+      },
+      "banned": {
+        "reason": {
+          "#mixin": "PlayerManager::checkCanJoin",
+          "#context": "profile"
+        },
+        "expiration": {
+          "#mixin": "PlayerManager::checkCanJoin",
+          "#context": "profile"
+        }
+      },
+      "banned_ip": {
+        "reason": {
+          "#mixin": "PlayerManager::checkCanJoin",
+          "#context": "profile"
+        },
+        "expiration": {
+          "#mixin": "PlayerManager::checkCanJoin",
+          "#context": "profile"
+        }
+      }
+    },
+    "player": {
+      "joined": {
+        "#mixin": "PlayerManager::onPlayerConnect",
+        "#context": "player",
+        "renamed": {
+          "#mixin": "PlayerManager::onPlayerConnect",
+          "#context": "player"
+        }
+      },
+      "left": {
+        "#mixin": "ServerPlayNetworkHandler::cleanUp",
+        "#context": "player"
+      }
+    }
+  },
+  "commands": {
+    "kick": {
+      "success": {
+        "#mixin": "KickCommand::execute",
+        "#context": "player"
+      }
+    }
+  },
+  "chat": {
+    "type": {
+      "advancement": {
+        "task": {
+          "#mixin": "AdvancementFrame::getChatAnnouncementText",
+          "#context": "player"
+        },
+        "challenge": {
+          "#mixin": "AdvancementFrame::getChatAnnouncementText",
+          "#context": "player"
+        },
+        "goal": {
+          "#mixin": "AdvancementFrame::getChatAnnouncementText",
+          "#context": "player"
+        }
+      }
+    }
+  }
+}

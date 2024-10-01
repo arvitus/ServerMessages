@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "de.example.servermessages.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "MutableTextMixin",
+    "context.AdvancementFrameMixin",
+    "context.ClientConnectionMixin",
+    "context.MinecraftServerMixin",
+    "context.PlayerManagerMixin",
+    "context.ServerPlayNetworkHandlerMixin",
+    "context.commands.KickCommand"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

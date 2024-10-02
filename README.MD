@@ -59,7 +59,7 @@ available [here](https://github.com/InventivetalentDev/minecraft-assets/tree/1.2
 }
 ```
 
-> [!IMPORTANT]  
+> [!WARNING]  
 > Don't copy this as is! The config is using the [json](https://en.wikipedia.org/wiki/JSON) format and json does NOT
 > support comments. The comments in the example are just for clarification. **Do not copy the comments!**
 

@@ -10,6 +10,8 @@ A Minecraft mod to customize any server message, with support for text formattin
 
 </div>
 
+---
+
 ## What does it do?
 
 This mod enables you to modify any¹ server message to your liking. You can replace the message itself, add or change

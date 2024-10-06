@@ -76,7 +76,8 @@ But natively, the server only uses a few translations.
 All translation keys, that are parsed on the server, are supported. That includes most of the messages you can see when
 playing on a server.
 
-For a more detailed list of supported keys, see [here](src/main/resources/assets/translationKeySupport.json).
+For a more detailed list of supported keys,
+see [here](src/main/resources/assets/servermessages/translationKeySupport.json).
 > [!NOTE]  
 > The information in this list may not be accurate!  
 > Though it can be helpful to get a quick overview, it's only based on my findings and a lot of assumptions.

@@ -8,6 +8,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextContent;
 import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.util.Colors;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,8 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.example.servermessages.ServerMessages.CONTEXT_STORE;
-import static de.example.servermessages.ServerMessages.SERVER;
+import static de.example.servermessages.ServerMessages.*;
 
 @Mixin(MutableText.class)
 public abstract class MutableTextMixin {
@@ -27,7 +27,7 @@ public abstract class MutableTextMixin {
     private static boolean parsing = false;
 
     @Inject(method = "of", at = @At("HEAD"), cancellable = true)
-    private static void myOf(TextContent content, CallbackInfoReturnable<MutableText> cir) {
+    private static void replaceCustomTranslations(TextContent content, CallbackInfoReturnable<MutableText> cir) {
         if (
             // (SERVER != null && !SERVER.isOnThread()) || // only call on logical server
             parsing ||
@@ -55,7 +55,13 @@ public abstract class MutableTextMixin {
         if (storedContext != null) context.with(PlaceholderContext.KEY, storedContext);
 
         parsing = true;
-        MutableText text = node.toText(context).copy();
+        MutableText text;
+        try {
+            text = node.toText(context).copy();
+        } catch (Exception e) {
+            LOGGER.error("An error has occurred during node parsing:", e);
+            text = Text.of("An error has occurred. See console for details.").copy().withColor(Colors.RED);
+        }
         parsing = false;
 
         cir.setReturnValue(text);

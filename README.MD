@@ -15,12 +15,15 @@ A Minecraft mod to customize any server message, with support for text formattin
 ## What does it do?
 
 This mod enables you to modify any¹ server message to your liking. You can replace the message itself, add or change
-the [formatting](https://placeholders.pb4.eu/user/quicktext/) and even use [placeholders](https://placeholders.pb4.eu/).
+the [formatting](https://placeholders.pb4.eu/user/quicktext/), and even
+use [placeholders](https://placeholders.pb4.eu/).
 The format is fully compatible with
 the [translated text format](https://minecraft.wiki/w/Raw_JSON_text_format#Translated_Text) used by language files.
 
-> Originally, I just needed the option to change the "not on whitelist" message and the "server closed" message. This
-> mod is what emerged from it.
+> Did you ever want to change the "You're not whitelisted" message, because you want to add more information for new
+> players? Or do you do regular restarts and just want to let your players know that the server will be up again in a
+> few seconds? Do you have some other messages in mind you want to change?  
+> **If this is the case, look no further!**
 
 ## How do I use it?
 

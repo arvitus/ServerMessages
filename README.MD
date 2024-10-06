@@ -97,6 +97,7 @@ Some messages support additional contexts. See the list below.
 |------------------------------------------|:-------------:|
 | `chat.type.advancement.*`                |   `player`    |
 | `commands.kick.success`                  |   `player`    |
+| `death.*`                                |   `player`    |
 | `multiplayer.disconnect.banned.*`        |   `profile`   |
 | `multiplayer.disconnect.banned_ip.*`     |   `profile`   |
 | `multiplayer.disconnect.not_whitelisted` |   `profile`   |

@@ -80,5 +80,21 @@
         }
       }
     }
+  },
+  "death": {
+    "#mixin": "DamageTracker::getAttackedFallDeathMessage",
+    "#context": "player",
+    "attack": {
+      "#mixins": [
+        "DamageSource::getDeathMessage",
+        "DamageTracker::getDeathMessage",
+        "ServerPlayerEntity::onDeath::method_14223"
+      ],
+      "#context": "player"
+    },
+    "fell": {
+      "#mixin": "DamageTracker::getFallDeathMessage",
+      "#context": "player"
+    }
   }
 }

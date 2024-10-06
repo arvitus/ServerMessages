@@ -10,7 +10,10 @@
     "context.MinecraftServerMixin",
     "context.PlayerManagerMixin",
     "context.ServerPlayNetworkHandlerMixin",
-    "context.commands.KickCommand"
+    "context.commands.KickCommand",
+    "context.deaths.DamageSourceMixin",
+    "context.deaths.DamageTrackerMixin",
+    "context.deaths.ServerPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

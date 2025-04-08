@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -42,8 +42,8 @@ processResources {
 
     filesMatching("fabric.mod.json") {
         expand "version": project.mod_version,
-               "minecraft_version": project.minecraft_version,
-               "loader_version": project.loader_version
+            "minecraft_version": project.minecraft_version,
+            "loader_version": project.loader_version
     }
 }
 
@@ -72,7 +72,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename {"${it}_${project.archivesBaseName}"}
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
 

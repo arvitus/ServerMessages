@@ -47,7 +47,9 @@ available [here](https://github.com/InventivetalentDev/minecraft-assets/tree/1.2
 
 > [!NOTE]  
 > Any other mod that modifies server messages (e.g. [BanHammer](https://modrinth.com/mod/banhammer)), will most
-> certainly take precedence over changes made by this mod.**
+> certainly take precedence over changes made by this mod.
+
+<h3 id="example-config"></h3>
 
 ### Example Config
 
@@ -77,10 +79,12 @@ All translation keys, that are parsed on the server, are supported. That include
 playing on a server.
 
 For a more detailed list of supported keys,
-see [here](src/main/resources/assets/servermessages/translationKeySupport.json).
+see [here](https://github.com/arvitus/ServerMessages/blob/main/src/main/resources/assets/servermessages/translationKeySupport.json).
 > [!NOTE]  
 > The information in this list may not be accurate!  
 > Though it can be helpful to get a quick overview, it's only based on my findings and a lot of assumptions.
+
+<h3 id="placeholder-contexts"></h3>
 
 ### Placeholder Contexts
 

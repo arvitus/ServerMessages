@@ -141,6 +141,6 @@ Any translation keys used in your custom messages will use the default values/fo
 provided. This is necessary to prevent infinite recursion.
 
 ---
-**[ ¹ ]:** *There are some special cases where it might not work as expected due to how minecraft handles certain
+**[ ¹ ]:** *There are some special cases where it might not work as expected due to how Minecraft handles certain
 messages. If you encounter one of those, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new),
 and I'll see what can be done to make them work too.*

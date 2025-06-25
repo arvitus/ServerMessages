@@ -11,7 +11,7 @@ public record WrappedLangText(String input, TextNode textNode) {
             index++;
         }
 
-        var node = TextNode.asSingle(parser.parseNodes(TextNode.of(input)));
+        var node = parser.parseNode(input);
 
         return new WrappedLangText(input, node);
     }

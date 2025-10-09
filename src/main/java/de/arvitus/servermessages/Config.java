@@ -17,6 +17,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static de.arvitus.servermessages.ServerMessages.*;
@@ -45,6 +46,7 @@ public class Config {
                 "multiplayer.disconnect.not_whitelisted", "<lang multiplayer.disconnect.not_whitelisted>",
                 "multiplayer.disconnect.server_shutdown", "<lang multiplayer.disconnect.server_shutdown>"
             );
+        Map<String, String> oldData = data;
 
         try (Reader reader = new FileReader(PATH.toFile())) {
             DataResult<Map<String, String>> result = CODEC.parse(
@@ -58,7 +60,10 @@ public class Config {
             LOGGER.warn("Error during config load, using previous value instead", e);
         }
 
-        getCache().clear();
+        if (data.equals(oldData)) return;
+
+        for (String key : getCache().keySet())
+            if (!Objects.equals(data.get(key), oldData.get(key))) cache.remove(key);
     }
 
     public static void save() {
@@ -82,6 +87,7 @@ public class Config {
 
     public static @Nullable WrappedLangText get(String key) {
         if (!getCache().containsKey(key) && getData().containsKey(key)) {
+            LOGGER.info("building cache for key: {}", key);
             String value = data.get(key);
             cache.put(key, WrappedLangText.from(PARSER, value));
         }

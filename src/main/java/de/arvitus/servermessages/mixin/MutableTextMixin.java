@@ -30,7 +30,6 @@ public abstract class MutableTextMixin {
     @Inject(method = "of", at = @At("HEAD"), cancellable = true)
     private static void replaceCustomTranslations(TextContent content, CallbackInfoReturnable<MutableText> cir) {
         if (
-            // (SERVER != null && !SERVER.isOnThread()) || // only call on logical server
             parsing ||
             !(content instanceof TranslatableTextContent translatable) ||
             !Config.contains(translatable.getKey())

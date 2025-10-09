@@ -1,6 +1,5 @@
 package de.arvitus.servermessages;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -12,9 +11,11 @@ import eu.pb4.placeholders.api.node.DynamicTextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 import eu.pb4.placeholders.api.parsers.TagLikeParser;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -22,6 +23,7 @@ import static de.arvitus.servermessages.ServerMessages.*;
 
 public class Config {
     public static final Path PATH = CONFIG_DIR.resolve("config.json");
+    public static final Codec<Map<String, String>> CODEC = Codec.unboundedMap(Codec.STRING, Codec.STRING);
     public static final ParserContext.Key<Function<String, Text>> DYN_KEY = DynamicTextNode.key(MOD_ID);
     public static final NodeParser PARSER = NodeParser.builder()
         .quickText()
@@ -31,65 +33,62 @@ public class Config {
         .placeholders(TagLikeParser.Format.of('%', 's'), DYN_KEY)
         .staticPreParsing()
         .build();
-    public static final Codec<Map<String, WrappedLangText>> CODEC = Codec.unboundedMap(
-        Codec.STRING,
-        Codec.STRING.xmap(x -> WrappedLangText.from(PARSER, x), WrappedLangText::input)
-    );
-    private static final ImmutableMap<String, WrappedLangText> DEFAULT_DATA = ImmutableMap.of(
-        "multiplayer.disconnect.not_whitelisted",
-        WrappedLangText.from(PARSER, "<lang multiplayer.disconnect.not_whitelisted>"),
-        "multiplayer.disconnect.server_shutdown",
-        WrappedLangText.from(PARSER, "<lang multiplayer.disconnect.server_shutdown>")
-    );
-    private static ImmutableMap<String, WrappedLangText> data = DEFAULT_DATA;
-    private static boolean ready = false;
+
+    private static Map<String, WrappedLangText> cache;
+    private static Map<String, String> data;
 
     private Config() {}
 
     public static void load() {
-        Config.ready = false;
-        Map<String, WrappedLangText> data = null;
+        if (data == null)
+            data = Map.of(
+                "multiplayer.disconnect.not_whitelisted", "<lang multiplayer.disconnect.not_whitelisted>",
+                "multiplayer.disconnect.server_shutdown", "<lang multiplayer.disconnect.server_shutdown>"
+            );
+
         try (Reader reader = new FileReader(PATH.toFile())) {
-            DataResult<Map<String, WrappedLangText>> result = CODEC.parse(
+            DataResult<Map<String, String>> result = CODEC.parse(
                 JsonOps.INSTANCE,
                 JsonParser.parseReader(reader)
             );
             data = result.getOrThrow();
         } catch (FileNotFoundException e) {
-            Config.createDefaultFile();
-            data = DEFAULT_DATA;
+            save();
         } catch (Exception e) {
-            LOGGER.warn("Error during config load, using previous config instead", e);
+            LOGGER.warn("Error during config load, using previous value instead", e);
         }
 
-        if (data != null) Config.data = ImmutableMap.copyOf(data);
-        Config.ready = true;
+        getCache().clear();
     }
 
-    private static void createDefaultFile() {
-        CONFIG_DIR.toFile().mkdir();
+    public static void save() {
         try (Writer writer = new FileWriter(PATH.toFile())) {
-            DataResult<JsonElement> result = CODEC.encodeStart(JsonOps.INSTANCE, DEFAULT_DATA);
+            DataResult<JsonElement> result = CODEC.encodeStart(JsonOps.INSTANCE, getData());
             new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(result.getOrThrow(), writer);
         } catch (Exception e) {
-            LOGGER.warn("Error during creation of default config", e);
+            LOGGER.warn("Error during config save", e);
         }
     }
 
-    public static boolean isReady() {
-        return Config.ready;
+    private static Map<String, String> getData() {
+        if (data == null) load();
+        return data;
     }
 
-    public static WrappedLangText get(String key) {
-        return Config.getData().get(key);
+    private static Map<String, WrappedLangText> getCache() {
+        if (cache == null) cache = new HashMap<>();
+        return cache;
+    }
+
+    public static @Nullable WrappedLangText get(String key) {
+        if (!getCache().containsKey(key) && getData().containsKey(key)) {
+            String value = data.get(key);
+            cache.put(key, WrappedLangText.from(PARSER, value));
+        }
+        return cache.get(key);
     }
 
     public static boolean contains(String key) {
-        return Config.getData().containsKey(key);
-    }
-
-    public static ImmutableMap<String, WrappedLangText> getData() {
-        if (Config.data == null) Config.load();
-        return Config.data;
+        return getData().containsKey(key);
     }
 }

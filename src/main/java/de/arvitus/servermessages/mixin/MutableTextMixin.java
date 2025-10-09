@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static de.arvitus.servermessages.ServerMessages.*;
 
@@ -31,12 +32,11 @@ public abstract class MutableTextMixin {
         if (
             // (SERVER != null && !SERVER.isOnThread()) || // only call on logical server
             parsing ||
-            !Config.isReady() || // to avoid recursion
             !(content instanceof TranslatableTextContent translatable) ||
             !Config.contains(translatable.getKey())
         ) return;
 
-        TextNode node = Config.get(translatable.getKey()).textNode();
+        TextNode node = Objects.requireNonNull(Config.get(translatable.getKey())).textNode();
 
         Map<String, Text> argPlaceholders = new HashMap<>();
         if (translatable.getArgs().length > 0) {

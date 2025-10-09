@@ -1,4 +1,4 @@
-package de.example.servermessages.mixin.context.commands;
+package de.arvitus.servermessages.mixin.context.commands;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
 
-import static de.example.servermessages.ServerMessages.CONTEXT_STORE;
+import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 
 @Mixin(net.minecraft.server.command.KickCommand.class)
 public abstract class KickCommand {

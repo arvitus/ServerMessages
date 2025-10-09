@@ -1,6 +1,6 @@
-package de.example.servermessages.mixin;
+package de.arvitus.servermessages.mixin;
 
-import de.example.servermessages.Config;
+import de.arvitus.servermessages.Config;
 import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.TextNode;
@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.example.servermessages.ServerMessages.*;
+import static de.arvitus.servermessages.ServerMessages.*;
 
 @Mixin(MutableText.class)
 public abstract class MutableTextMixin {

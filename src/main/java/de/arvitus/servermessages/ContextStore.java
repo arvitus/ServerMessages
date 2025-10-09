@@ -1,4 +1,4 @@
-package de.example.servermessages;
+package de.arvitus.servermessages;
 
 import eu.pb4.placeholders.api.PlaceholderContext;
 import org.jetbrains.annotations.Nullable;

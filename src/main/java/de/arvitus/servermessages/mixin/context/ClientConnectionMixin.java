@@ -1,4 +1,4 @@
-package de.example.servermessages.mixin.context;
+package de.arvitus.servermessages.mixin.context;
 
 import com.google.common.net.InetAddresses;
 import eu.pb4.placeholders.api.PlaceholderContext;
@@ -16,8 +16,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.List;
 
-import static de.example.servermessages.ServerMessages.CONTEXT_STORE;
-import static de.example.servermessages.ServerMessages.SERVER;
+import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
+import static de.arvitus.servermessages.ServerMessages.SERVER;
 
 @Mixin(ClientConnection.class)
 public abstract class ClientConnectionMixin {

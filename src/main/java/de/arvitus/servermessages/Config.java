@@ -1,4 +1,4 @@
-package de.example.servermessages;
+package de.arvitus.servermessages;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.function.Function;
 
-import static de.example.servermessages.ServerMessages.*;
+import static de.arvitus.servermessages.ServerMessages.*;
 
 public class Config {
     public static final Path PATH = CONFIG_DIR.resolve("config.json");

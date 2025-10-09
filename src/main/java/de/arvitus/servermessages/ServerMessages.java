@@ -1,4 +1,4 @@
-package de.example.servermessages;
+package de.arvitus.servermessages;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;

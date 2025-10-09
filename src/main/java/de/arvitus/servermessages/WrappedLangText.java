@@ -1,4 +1,4 @@
-package de.example.servermessages;
+package de.arvitus.servermessages;
 
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;

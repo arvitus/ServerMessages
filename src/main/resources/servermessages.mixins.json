@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "de.example.servermessages.mixin",
+  "package": "de.arvitus.servermessages.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "MutableTextMixin",

@@ -16,7 +16,7 @@
   "environment": "server",
   "entrypoints": {
     "main": [
-      "de.example.servermessages.ServerMessages"
+      "de.arvitus.servermessages.ServerMessages"
     ]
   },
   "mixins": [

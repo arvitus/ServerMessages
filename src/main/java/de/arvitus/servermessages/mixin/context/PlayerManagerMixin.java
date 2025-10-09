@@ -1,4 +1,4 @@
-package de.example.servermessages.mixin.context;
+package de.arvitus.servermessages.mixin.context;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.net.SocketAddress;
 import java.util.List;
 
-import static de.example.servermessages.ServerMessages.CONTEXT_STORE;
+import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {

@@ -1,4 +1,4 @@
-package de.example.servermessages.mixin.context;
+package de.arvitus.servermessages.mixin.context;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import eu.pb4.placeholders.api.PlaceholderContext;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static de.example.servermessages.ServerMessages.CONTEXT_STORE;
+import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {

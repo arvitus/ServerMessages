@@ -35,7 +35,9 @@ public abstract class MutableTextMixin {
             !Config.contains(translatable.getKey())
         ) return;
 
+        parsing = true;
         TextNode node = Objects.requireNonNull(Config.get(translatable.getKey())).textNode();
+        parsing = false;
 
         Map<String, Text> argPlaceholders = new HashMap<>();
         if (translatable.getArgs().length > 0) {

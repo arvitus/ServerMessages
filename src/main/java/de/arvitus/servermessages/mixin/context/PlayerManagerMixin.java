@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ConnectedClientData;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -62,12 +63,21 @@ public abstract class PlayerManagerMixin {
             )
         }
     )
-    private void setDisconnectContext(SocketAddress address, GameProfile profile, CallbackInfoReturnable<Text> cir) {
+    private void setDisconnectContext(
+        SocketAddress address,
+        PlayerConfigEntry configEntry,
+        CallbackInfoReturnable<Text> cir
+    ) {
+        GameProfile profile = new GameProfile(configEntry.id(), configEntry.name());
         CONTEXT_STORE.put("multiplayer.disconnect", PlaceholderContext.of(profile, this.server));
     }
 
     @Inject(method = "checkCanJoin", at = @At("RETURN"))
-    private void resetDisconnectContext(SocketAddress address, GameProfile profile, CallbackInfoReturnable<Text> cir) {
+    private void resetDisconnectContext(
+        SocketAddress address,
+        PlayerConfigEntry configEntry,
+        CallbackInfoReturnable<Text> cir
+    ) {
         CONTEXT_STORE.pop("multiplayer.disconnect");
     }
 

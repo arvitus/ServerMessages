@@ -87,7 +87,6 @@ public class Config {
 
     public static @Nullable WrappedLangText get(String key) {
         if (!getCache().containsKey(key) && getData().containsKey(key)) {
-            LOGGER.info("building cache for key: {}", key);
             String value = data.get(key);
             cache.put(key, WrappedLangText.from(PARSER, value));
         }

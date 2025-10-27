@@ -67,6 +67,7 @@ public class Config {
     }
 
     public static void save() {
+        PATH.getParent().toFile().mkdirs();
         try (Writer writer = new FileWriter(PATH.toFile())) {
             DataResult<JsonElement> result = CODEC.encodeStart(JsonOps.INSTANCE, getData());
             new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(result.getOrThrow(), writer);

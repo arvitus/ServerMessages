@@ -3,13 +3,13 @@ package de.arvitus.servermessages.mixin.context;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
 import eu.pb4.placeholders.api.PlaceholderContext;
-import net.minecraft.network.ClientConnection;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerConfigEntry;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ConnectedClientData;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.CommonListenerCookie;
+import net.minecraft.server.players.NameAndId;
+import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,74 +23,75 @@ import java.util.List;
 
 import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 
-@Mixin(PlayerManager.class)
-public abstract class PlayerManagerMixin {
+@Mixin(PlayerList.class)
+public abstract class PlayerListMixin {
     @Shadow
     @Final
     private MinecraftServer server;
 
     @Shadow
     @Final
-    private List<ServerPlayerEntity> players;
+    private List<ServerPlayer> players;
 
     @Inject(
-        method = "onPlayerConnect",
+        method = "placeNewPlayer",
         at = @At(
             value = "INVOKE",
             target = "Ljava/lang/String;equalsIgnoreCase(Ljava/lang/String;)Z"
         )
     )
     private void setJoinContext(
-        ClientConnection connection,
-        ServerPlayerEntity player,
-        ConnectedClientData clientData,
+        Connection connection,
+        ServerPlayer player,
+        CommonListenerCookie clientData,
         CallbackInfo ci
     ) {
         CONTEXT_STORE.put("multiplayer.player.joined", PlaceholderContext.of(player));
     }
 
     @Inject(
-        method = "checkCanJoin",
+        method = "canPlayerLogin",
         at = {
             @At(
                 value = "INVOKE",
-                target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;)Lnet/minecraft/text/MutableText;"
+                target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;)" +
+                         "Lnet/minecraft/network/chat/MutableComponent;"
             ),
             @At(
                 value = "INVOKE",
-                target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;[Ljava/lang/Object;)" +
-                         "Lnet/minecraft/text/MutableText;"
+                target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;[Ljava/lang/Object;)" +
+                         "Lnet/minecraft/network/chat/MutableComponent;"
             )
         }
     )
     private void setDisconnectContext(
         SocketAddress address,
-        PlayerConfigEntry configEntry,
-        CallbackInfoReturnable<Text> cir
+        NameAndId configEntry,
+        CallbackInfoReturnable<Component> cir
     ) {
         GameProfile profile = new GameProfile(configEntry.id(), configEntry.name());
         CONTEXT_STORE.put("multiplayer.disconnect", PlaceholderContext.of(profile, this.server));
     }
 
-    @Inject(method = "checkCanJoin", at = @At("RETURN"))
+    @Inject(method = "canPlayerLogin", at = @At("RETURN"))
     private void resetDisconnectContext(
         SocketAddress address,
-        PlayerConfigEntry configEntry,
-        CallbackInfoReturnable<Text> cir
+        NameAndId configEntry,
+        CallbackInfoReturnable<Component> cir
     ) {
         CONTEXT_STORE.pop("multiplayer.disconnect");
     }
 
     @Inject(
-        method = "disconnectAllPlayers",
+        method = "removeAll",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;)Lnet/minecraft/text/MutableText;"
+            target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;)" +
+                     "Lnet/minecraft/network/chat/MutableComponent;"
         )
     )
     private void setServerStopContext(CallbackInfo ci, @Local int i) {
-        ServerPlayerEntity player = this.players.get(i);
+        ServerPlayer player = this.players.get(i);
         CONTEXT_STORE.put("multiplayer.disconnect.server_shutdown", PlaceholderContext.of(player));
     }
 }
-

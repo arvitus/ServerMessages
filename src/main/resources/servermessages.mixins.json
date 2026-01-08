@@ -4,16 +4,16 @@
   "package": "de.arvitus.servermessages.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "MutableTextMixin",
-    "context.AdvancementFrameMixin",
-    "context.ClientConnectionMixin",
+    "MutableComponentMixin",
+    "context.AdvancementTypeMixin",
+    "context.ConnectionMixin",
     "context.MinecraftServerMixin",
-    "context.PlayerManagerMixin",
-    "context.ServerPlayNetworkHandlerMixin",
+    "context.PlayerListMixin",
+    "context.ServerGamePacketListenerImplMixin",
     "context.commands.KickCommand",
+    "context.deaths.CombatTrackerMixin",
     "context.deaths.DamageSourceMixin",
-    "context.deaths.DamageTrackerMixin",
-    "context.deaths.ServerPlayerEntityMixin"
+    "context.deaths.ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

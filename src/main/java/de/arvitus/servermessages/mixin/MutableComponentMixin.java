@@ -4,11 +4,11 @@ import de.arvitus.servermessages.Config;
 import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.TextNode;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextContent;
-import net.minecraft.text.TranslatableTextContent;
-import net.minecraft.util.Colors;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.util.CommonColors;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,16 +22,19 @@ import java.util.Objects;
 
 import static de.arvitus.servermessages.ServerMessages.*;
 
-@Mixin(MutableText.class)
-public abstract class MutableTextMixin {
+@Mixin(MutableComponent.class)
+public abstract class MutableComponentMixin {
     @Unique
     private static boolean parsing = false;
 
-    @Inject(method = "of", at = @At("HEAD"), cancellable = true)
-    private static void replaceCustomTranslations(TextContent content, CallbackInfoReturnable<MutableText> cir) {
+    @Inject(method = "create", at = @At("HEAD"), cancellable = true)
+    private static void replaceCustomTranslations(
+        ComponentContents content,
+        CallbackInfoReturnable<MutableComponent> cir
+    ) {
         if (
             parsing ||
-            !(content instanceof TranslatableTextContent translatable) ||
+            !(content instanceof TranslatableContents translatable) ||
             !Config.contains(translatable.getKey())
         ) return;
 
@@ -39,12 +42,12 @@ public abstract class MutableTextMixin {
         TextNode node = Objects.requireNonNull(Config.get(translatable.getKey())).textNode();
         parsing = false;
 
-        Map<String, Text> argPlaceholders = new HashMap<>();
+        Map<String, Component> argPlaceholders = new HashMap<>();
         if (translatable.getArgs().length > 0) {
             for (Object arg : Arrays.stream(translatable.getArgs()).toList()) {
-                Text text;
-                if (arg instanceof Text t) text = t;
-                else text = Text.of(String.valueOf(arg));
+                Component text;
+                if (arg instanceof Component t) text = t;
+                else text = Component.literal(String.valueOf(arg));
                 argPlaceholders.put((argPlaceholders.size() + 1) + "$", text);
             }
         }
@@ -56,12 +59,13 @@ public abstract class MutableTextMixin {
         if (storedContext != null) context.with(PlaceholderContext.KEY, storedContext);
 
         parsing = true;
-        MutableText text;
+        MutableComponent text;
         try {
             text = node.toText(context).copy();
         } catch (Exception e) {
             LOGGER.error("An error has occurred during node parsing:", e);
-            text = Text.of("An error has occurred. See console for details.").copy().withColor(Colors.RED);
+            text = Component.literal("An error has occurred. See console for details.").copy().withColor(
+                CommonColors.RED);
         }
         parsing = false;
 

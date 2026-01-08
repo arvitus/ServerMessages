@@ -10,7 +10,7 @@ import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.node.DynamicTextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 import eu.pb4.placeholders.api.parsers.TagLikeParser;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -25,7 +25,7 @@ import static de.arvitus.servermessages.ServerMessages.*;
 public class Config {
     public static final Path PATH = CONFIG_DIR.resolve("config.json");
     public static final Codec<Map<String, String>> CODEC = Codec.unboundedMap(Codec.STRING, Codec.STRING);
-    public static final ParserContext.Key<Function<String, Text>> DYN_KEY = DynamicTextNode.key(MOD_ID);
+    public static final ParserContext.Key<Function<String, Component>> DYN_KEY = DynamicTextNode.key(MOD_ID);
     public static final NodeParser PARSER = NodeParser.builder()
         .quickText()
         .simplifiedTextFormat()

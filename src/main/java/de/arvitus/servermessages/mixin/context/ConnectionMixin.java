@@ -3,9 +3,9 @@ package de.arvitus.servermessages.mixin.context;
 import com.google.common.net.InetAddresses;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import io.netty.channel.ChannelHandlerContext;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,16 +19,17 @@ import java.util.List;
 import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 import static de.arvitus.servermessages.ServerMessages.SERVER;
 
-@Mixin(ClientConnection.class)
-public abstract class ClientConnectionMixin {
+@Mixin(Connection.class)
+public abstract class ConnectionMixin {
     @Shadow
     private SocketAddress address;
 
     @Inject(
-        method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V",
+        method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;)Lnet/minecraft/text/MutableText;",
+            target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;)" +
+                     "Lnet/minecraft/network/chat/MutableComponent;",
             ordinal = 0
         )
     )
@@ -39,7 +40,7 @@ public abstract class ClientConnectionMixin {
             ? InetAddresses.toAddrString(inetSocketAddress.getAddress())
             : "<unknown>";
 
-        List<ServerPlayerEntity> players = SERVER.getPlayerManager().getPlayersByIp(ip);
+        List<ServerPlayer> players = SERVER.getPlayerList().getPlayersWithAddress(ip);
         if (players.isEmpty()) return;
 
         CONTEXT_STORE.put("multiplayer.disconnect.server_shutdown", PlaceholderContext.of(players.getFirst()));

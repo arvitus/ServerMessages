@@ -1,12 +1,21 @@
+// TODO(Ravel): Failed to fully resolve file: class com.intellij.psi.impl.source.tree.java.PsiBinaryExpressionImpl
+//  cannot be cast to class com.intellij.psi.PsiLiteralExpression (com.intellij.psi.impl.source.tree.java
+//  .PsiBinaryExpressionImpl and com.intellij.psi.PsiLiteralExpression are in unnamed module of loader com.intellij
+//  .ide.plugins.cl.PluginClassLoader @462dfbe7)
+// TODO(Ravel): Failed to fully resolve file: class com.intellij.psi.impl.source.tree.java.PsiBinaryExpressionImpl
+//  cannot be cast to class com.intellij.psi.PsiLiteralExpression (com.intellij.psi.impl.source.tree.java
+//  .PsiBinaryExpressionImpl and com.intellij.psi.PsiLiteralExpression are in unnamed module of loader com.intellij
+//  .ide.plugins.cl.PluginClassLoader @462dfbe7)
 package de.arvitus.servermessages.mixin.context.commands;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.brigadier.context.CommandContext;
 import eu.pb4.placeholders.api.PlaceholderContext;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,44 +26,44 @@ import java.util.Collection;
 
 import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 
-@Mixin(net.minecraft.server.command.KickCommand.class)
+@Mixin(net.minecraft.server.commands.KickCommand.class)
 public abstract class KickCommand {
     @Unique
     private static boolean withoutReason = false;
 
     @Inject(method = "method_13409", at = @At("HEAD"))
-    private static void setType(CommandContext<ServerCommandSource> context, CallbackInfoReturnable<Integer> cir) {
+    private static void setType(CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir) {
         withoutReason = true;
     }
 
     @Inject(
-        method = "execute",
+        method = "kickPlayers",
         at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/server/network/ServerPlayerEntity;" +
-                     "networkHandler:Lnet/minecraft/server/network/ServerPlayNetworkHandler;"
-        )
+            target = "Lnet/minecraft/server/level/ServerPlayer;" +
+                     "connection:Lnet/minecraft/server/network/ServerGamePacketListenerImpl;",
+            opcode = Opcodes.GETFIELD)
     )
     private static void setKickContext(
-        ServerCommandSource source,
-        Collection<ServerPlayerEntity> targets,
-        Text reason,
+        CommandSourceStack source,
+        Collection<ServerPlayer> targets,
+        Component reason,
         CallbackInfoReturnable<Integer> cir,
-        @Local ServerPlayerEntity player,
-        @Local(argsOnly = true) LocalRef<Text> reasonRef
+        @Local ServerPlayer player,
+        @Local(argsOnly = true) LocalRef<Component> reasonRef
     ) {
         PlaceholderContext context = PlaceholderContext.of(player);
         CONTEXT_STORE.put("commands.kick.success", context);
         if (!withoutReason) return;
         CONTEXT_STORE.put("multiplayer.disconnect.kicked", context);
-        reasonRef.set(Text.translatable("multiplayer.disconnect.kicked"));
+        reasonRef.set(Component.translatable("multiplayer.disconnect.kicked"));
     }
 
-    @Inject(method = "execute", at = @At("RETURN"))
+    @Inject(method = "kickPlayers", at = @At("RETURN"))
     private static void resetType(
-        ServerCommandSource source,
-        Collection<ServerPlayerEntity> targets,
-        Text reason,
+        CommandSourceStack source,
+        Collection<ServerPlayer> targets,
+        Component reason,
         CallbackInfoReturnable<Integer> cir
     ) {
         withoutReason = false;

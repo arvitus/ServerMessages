@@ -1,6 +1,6 @@
 package de.arvitus.servermessages.mixin.context.deaths;
 
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.CombatEntry;
 import net.minecraft.world.damagesource.CombatTracker;
@@ -29,7 +29,7 @@ public abstract class CombatTrackerMixin {
         String deathTranslationKey,
         CallbackInfoReturnable<Component> cir
     ) {
-        CONTEXT_STORE.put("death", PlaceholderContext.of(this.mob));
+        CONTEXT_STORE.put("death", ServerPlaceholderContext.of(this.mob));
     }
 
     @Inject(
@@ -41,7 +41,7 @@ public abstract class CombatTrackerMixin {
         )
     )
     private void setFallDeathContext(CombatEntry damageRecord, Entity attacker, CallbackInfoReturnable<Component> cir) {
-        CONTEXT_STORE.put("death.fell", PlaceholderContext.of(this.mob));
+        CONTEXT_STORE.put("death.fell", ServerPlaceholderContext.of(this.mob));
     }
 
     @Inject(
@@ -53,6 +53,6 @@ public abstract class CombatTrackerMixin {
         )
     )
     private void setDeathContext(CallbackInfoReturnable<Component> cir) {
-        CONTEXT_STORE.put("death.attack", PlaceholderContext.of(this.mob));
+        CONTEXT_STORE.put("death.attack", ServerPlaceholderContext.of(this.mob));
     }
 }

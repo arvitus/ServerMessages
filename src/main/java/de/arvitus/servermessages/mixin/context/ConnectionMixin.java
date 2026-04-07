@@ -1,7 +1,7 @@
 package de.arvitus.servermessages.mixin.context;
 
 import com.google.common.net.InetAddresses;
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
@@ -43,6 +43,6 @@ public abstract class ConnectionMixin {
         List<ServerPlayer> players = SERVER.getPlayerList().getPlayersWithAddress(ip);
         if (players.isEmpty()) return;
 
-        CONTEXT_STORE.put("multiplayer.disconnect.server_shutdown", PlaceholderContext.of(players.getFirst()));
+        CONTEXT_STORE.put("multiplayer.disconnect.server_shutdown", ServerPlaceholderContext.of(players.getFirst()));
     }
 }

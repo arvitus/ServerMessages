@@ -1,7 +1,7 @@
 package de.arvitus.servermessages.mixin.context;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +22,6 @@ public abstract class MinecraftServerMixin {
         )
     )
     private void setWhitelistContext(CallbackInfo ci, @Local ServerPlayer player) {
-        CONTEXT_STORE.put("multiplayer.disconnect.not_whitelisted", PlaceholderContext.of(player));
+        CONTEXT_STORE.put("multiplayer.disconnect.not_whitelisted", ServerPlaceholderContext.of(player));
     }
 }

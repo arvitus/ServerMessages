@@ -1,6 +1,6 @@
 package de.arvitus.servermessages.mixin.context.deaths;
 
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,7 +14,7 @@ import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
     @Inject(
-        method = "method_14223",
+        method = "lambda$die$0",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;[Ljava/lang/Object;)" +
@@ -22,6 +22,6 @@ public abstract class ServerPlayerMixin {
         )
     )
     private void setExceptionalDeathContext(Component text, CallbackInfoReturnable<Packet<?>> cir) {
-        CONTEXT_STORE.put("death.attack", PlaceholderContext.of((ServerPlayer) (Object) this));
+        CONTEXT_STORE.put("death.attack", ServerPlaceholderContext.of((ServerPlayer) (Object) this));
     }
 }

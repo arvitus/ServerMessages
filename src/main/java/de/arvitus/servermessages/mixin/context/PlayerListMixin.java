@@ -2,7 +2,7 @@ package de.arvitus.servermessages.mixin.context;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -46,7 +46,7 @@ public abstract class PlayerListMixin {
         CommonListenerCookie clientData,
         CallbackInfo ci
     ) {
-        CONTEXT_STORE.put("multiplayer.player.joined", PlaceholderContext.of(player));
+        CONTEXT_STORE.put("multiplayer.player.joined", ServerPlaceholderContext.of(player));
     }
 
     @Inject(
@@ -70,7 +70,7 @@ public abstract class PlayerListMixin {
         CallbackInfoReturnable<Component> cir
     ) {
         GameProfile profile = new GameProfile(configEntry.id(), configEntry.name());
-        CONTEXT_STORE.put("multiplayer.disconnect", PlaceholderContext.of(profile, this.server));
+        CONTEXT_STORE.put("multiplayer.disconnect", ServerPlaceholderContext.of(profile, this.server));
     }
 
     @Inject(method = "canPlayerLogin", at = @At("RETURN"))
@@ -92,6 +92,6 @@ public abstract class PlayerListMixin {
     )
     private void setServerStopContext(CallbackInfo ci, @Local int i) {
         ServerPlayer player = this.players.get(i);
-        CONTEXT_STORE.put("multiplayer.disconnect.server_shutdown", PlaceholderContext.of(player));
+        CONTEXT_STORE.put("multiplayer.disconnect.server_shutdown", ServerPlaceholderContext.of(player));
     }
 }

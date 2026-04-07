@@ -1,6 +1,6 @@
 package de.arvitus.servermessages.mixin.context;
 
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,6 +20,6 @@ public abstract class AdvancementTypeMixin {
         ServerPlayer player,
         CallbackInfoReturnable<MutableComponent> cir
     ) {
-        CONTEXT_STORE.put("chat.type.advancement", PlaceholderContext.of(player));
+        CONTEXT_STORE.put("chat.type.advancement", ServerPlaceholderContext.of(player));
     }
 }

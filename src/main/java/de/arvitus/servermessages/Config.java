@@ -30,7 +30,7 @@ public class Config {
         .quickText()
         .simplifiedTextFormat()
         .legacyAll()
-        .globalPlaceholders(TagLikeParser.PLACEHOLDER_USER)
+        .serverPlaceholders(TagLikeParser.PLACEHOLDER_USER)
         .placeholders(TagLikeParser.Format.of('%', 's'), DYN_KEY)
         .staticPreParsing()
         .build();

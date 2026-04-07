@@ -1,16 +1,16 @@
 package de.arvitus.servermessages;
 
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ContextStore {
-    private final Map<String, PlaceholderContext> data = new HashMap<>();
+    private final Map<String, ServerPlaceholderContext> data = new HashMap<>();
 
     @Nullable
-    public PlaceholderContext pop(String key) {
+    public ServerPlaceholderContext pop(String key) {
         while (!data.containsKey(key)) {
             int index = key.lastIndexOf('.');
             if (index > 0) key = key.substring(0, index);
@@ -19,7 +19,7 @@ public class ContextStore {
         return data.remove(key);
     }
 
-    public PlaceholderContext put(String key, PlaceholderContext value) {
+    public ServerPlaceholderContext put(String key, ServerPlaceholderContext value) {
         return data.put(key, value);
     }
 

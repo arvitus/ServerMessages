@@ -1,6 +1,6 @@
 package de.arvitus.servermessages.mixin.context.deaths;
 
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +15,6 @@ import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 public abstract class DamageSourceMixin {
     @Inject(method = "getLocalizedDeathMessage", at = @At("HEAD"))
     private void setDeathContext(LivingEntity killed, CallbackInfoReturnable<Component> cir) {
-        CONTEXT_STORE.put("death.attack", PlaceholderContext.of(killed));
+        CONTEXT_STORE.put("death.attack", ServerPlaceholderContext.of(killed));
     }
 }

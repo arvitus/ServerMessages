@@ -1,6 +1,6 @@
 package de.arvitus.servermessages.mixin.context;
 
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +18,6 @@ public abstract class ServerGamePacketListenerImplMixin {
 
     @Inject(method = "removePlayerFromWorld", at = @At("HEAD"))
     private void setLeaveContext(CallbackInfo ci) {
-        CONTEXT_STORE.put("multiplayer.player.left", PlaceholderContext.of(this.player));
+        CONTEXT_STORE.put("multiplayer.player.left", ServerPlaceholderContext.of(this.player));
     }
 }

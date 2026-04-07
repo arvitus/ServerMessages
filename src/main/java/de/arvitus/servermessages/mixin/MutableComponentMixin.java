@@ -2,7 +2,7 @@ package de.arvitus.servermessages.mixin;
 
 import de.arvitus.servermessages.Config;
 import eu.pb4.placeholders.api.ParserContext;
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import eu.pb4.placeholders.api.node.TextNode;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
@@ -52,16 +52,16 @@ public abstract class MutableComponentMixin {
             }
         }
 
-        PlaceholderContext storedContext = CONTEXT_STORE.pop(translatable.getKey());
-        if (storedContext == null && SERVER != null) storedContext = PlaceholderContext.of(SERVER);
+        ServerPlaceholderContext storedContext = CONTEXT_STORE.pop(translatable.getKey());
+        if (storedContext == null && SERVER != null) storedContext = ServerPlaceholderContext.of(SERVER);
 
         ParserContext context = ParserContext.of(Config.DYN_KEY, argPlaceholders::get);
-        if (storedContext != null) context.with(PlaceholderContext.KEY, storedContext);
+        if (storedContext != null) context.with(ServerPlaceholderContext.SERVER_KEY, storedContext);
 
         parsing = true;
         MutableComponent text;
         try {
-            text = node.toText(context).copy();
+            text = node.toComponent(context).copy();
         } catch (Exception e) {
             LOGGER.error("An error has occurred during node parsing:", e);
             text = Component.literal("An error has occurred. See console for details.").copy().withColor(

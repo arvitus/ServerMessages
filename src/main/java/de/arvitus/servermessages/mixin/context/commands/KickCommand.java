@@ -1,11 +1,3 @@
-// TODO(Ravel): Failed to fully resolve file: class com.intellij.psi.impl.source.tree.java.PsiBinaryExpressionImpl
-//  cannot be cast to class com.intellij.psi.PsiLiteralExpression (com.intellij.psi.impl.source.tree.java
-//  .PsiBinaryExpressionImpl and com.intellij.psi.PsiLiteralExpression are in unnamed module of loader com.intellij
-//  .ide.plugins.cl.PluginClassLoader @462dfbe7)
-// TODO(Ravel): Failed to fully resolve file: class com.intellij.psi.impl.source.tree.java.PsiBinaryExpressionImpl
-//  cannot be cast to class com.intellij.psi.PsiLiteralExpression (com.intellij.psi.impl.source.tree.java
-//  .PsiBinaryExpressionImpl and com.intellij.psi.PsiLiteralExpression are in unnamed module of loader com.intellij
-//  .ide.plugins.cl.PluginClassLoader @462dfbe7)
 package de.arvitus.servermessages.mixin.context.commands;
 
 import com.llamalad7.mixinextras.sugar.Local;

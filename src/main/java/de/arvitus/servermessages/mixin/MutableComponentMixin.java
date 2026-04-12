@@ -1,6 +1,7 @@
 package de.arvitus.servermessages.mixin;
 
 import de.arvitus.servermessages.Config;
+import de.arvitus.servermessages.ServerMessages;
 import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import eu.pb4.placeholders.api.node.TextNode;
@@ -33,6 +34,7 @@ public abstract class MutableComponentMixin {
         CallbackInfoReturnable<MutableComponent> cir
     ) {
         if (
+            !ServerMessages.isEnabled() ||
             parsing ||
             !(content instanceof TranslatableContents translatable) ||
             !Config.contains(translatable.getKey())

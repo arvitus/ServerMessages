@@ -19,7 +19,21 @@ public class ServerMessages implements ModInitializer {
     public static final ContextStore CONTEXT_STORE = new ContextStore();
     @Nullable
     public static MinecraftServer SERVER;
+    private static boolean enabled = true;
 
+    public static boolean isEnabled() {
+        return enabled;
+    }
+
+    public static void withDisabled(Runnable r) {
+        var wasEnabled = enabled;
+        enabled = false;
+        try {
+            r.run();
+        } finally {
+            enabled = wasEnabled;
+        }
+    }
 
     @Override
     public void onInitialize() {

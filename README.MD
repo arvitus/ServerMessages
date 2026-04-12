@@ -40,7 +40,7 @@ on a player/entity! So `${server:tps}` and `${world:name}` (overworld) are perfe
 not always work.  
 *For more information, see [Placeholder Contexts](#placeholder-contexts).*
 
-The config format is compatible with the minecraft language file format. So you could simply replace the config with a
+The config format is compatible with the Minecraft language file format. So you could simply replace the config with a
 language file (strongly discouraged) and it would work fine. Note, however, that this would NOT overwrite the language
 setting of the players! For reference, you can find a list of all language files currently
 available [here](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21/assets/minecraft/lang).
@@ -67,7 +67,7 @@ available [here](https://github.com/InventivetalentDev/minecraft-assets/tree/1.2
 ```
 
 > [!WARNING]  
-> Don't copy this as is! The config is using the [json](https://en.wikipedia.org/wiki/JSON) format and json does NOT
+> Don't copy this as is! The config is using the [JSON](https://en.wikipedia.org/wiki/JSON) format and JSON does **NOT**
 > support comments. The comments in the example are just for clarification. **Do not copy the comments!**
 
 ### Supported Translation Keys
@@ -112,9 +112,8 @@ Some messages support additional contexts. See the list below.
 | `multiplayer.player.joined.renamed`      |   `player`    |
 | `multiplayer.player.left`                |   `player`    |
 
-> I will be adding more contexts over time, but since I have to do this manually for each message, it can take a while.
-> If you want a specific context added, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new) and
-> I'll prioritize it.
+> If you want a specific context added, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new) or
+> [tell me on Discord](https://discord.gg/xzdbetZVrn).
 
 ## Why do I need it?
 
@@ -122,7 +121,7 @@ Almost every text message, a vanilla server sends to its players, uses a transla
 message. So instead of sending actual text (e.g. `<Player> joined the game`), it sends something
 like `translate[multiplayer.player.joined]`. The client then converts this into actual text, using the player's selected
 language. This way the game ensures that each player will see the message in their preferred language. While this is
-pretty helpful, sometimes it may not be the behaviour you want, because you cannot change the formatting of those
+pretty helpful, sometimes it may not be the behavior you want, because you cannot change the formatting of those
 messages without forcing your players to use a custom resource pack. This is why this mod exists.
 
 Usually those messages are displayed as plain old white text, which is pretty boring. So to spice things up, you need to

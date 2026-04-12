@@ -60,7 +60,9 @@ language setting of the players! For reference, you can find a list of all langu
   // add text; use nested translation argument
   "multiplayer.player.joined": "<yellow><lang multiplayer.player.joined '%s'>. Good to see you!</yellow>",
   // replace message; use translation argument
-  "multiplayer.player.left": "<yellow>See you soon, <bold>%s</bold>!</yellow>"
+  "multiplayer.player.left": "<yellow>See you soon, <bold>%s</bold>!</yellow>",
+  // custom translation key; add reason to kick message
+  "multiplayer.disconnect.kicked.reason": "<lang multiplayer.disconnect.kicked>\n<yellow>%s</yellow>"
 }
 ```
 
@@ -111,6 +113,18 @@ but NOT the [Player](https://placeholders.pb4.eu/user/default-placeholders/#play
 
 > If you want a specific context added, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new) or
 > [tell me on Discord](https://discord.gg/xzdbetZVrn).
+
+### Additional Translation Keys
+
+This mod also adds some additional translation keys for use in the config.
+They will let you customize some messages that you normally would not be able to change.
+
+> [!NOTE]
+> These translation keys are **not** provided by Minecraft itself and **only** work when specified in the mod config.
+
+| Translation Key                        | Context  | Notes                                                                                                                                                                                                                                                                          | Default |
+|----------------------------------------|:--------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| `multiplayer.disconnect.kicked.reason` | `player` | Sent to the kicked player(s), if there was a reason specified.<br/><br/>*The reason is the only argument (`%s`).*<br/>*See [`multiplayer.disconnect.banned.reason`](https://github.com/InventivetalentDev/minecraft-assets/blob/26.1/assets/minecraft/lang/en_us.json#L5596).* | `%s`    |
 
 ## Why do I need it?
 

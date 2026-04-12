@@ -14,26 +14,24 @@ A Minecraft mod to customize any server message, with support for text formattin
 
 ## What does it do?
 
-This mod enables you to modify any¹ server message to your liking. You can replace the message itself, add or change
-the [formatting](https://placeholders.pb4.eu/user/quicktext/), and even
-use [placeholders](https://placeholders.pb4.eu/).
-The format is fully compatible with
+This mod lets you modify any<sup id="a1">[[1]](#f1)</sup> server message to your liking. You can replace the
+message itself, add or change the [formatting](https://placeholders.pb4.eu/user/quicktext/),
+and even use [placeholders](https://placeholders.pb4.eu/). The format is fully compatible with
 the [translated text format](https://minecraft.wiki/w/Raw_JSON_text_format#Translated_Text) used by language files.
 
-> Did you ever want to change the "You're not whitelisted" message, because you want to add more information for new
-> players? Or do you do regular restarts and just want to let your players know that the server will be up again in a
-> few seconds? Do you have some other messages in mind you want to change?  
-> **If this is the case, look no further!**
+Common use cases include changing the color of messages like "You have been banned", adding information to the "You're
+not whitelisted" message or customizing the kick notification. You could even use the mod to display some stats when a
+player joins or leaves the server or make death messages appear in rainbow colors. The possibilities are endless!
 
 ## How do I use it?
 
 To modify a message, you simply add the corresponding
-[translation key](https://github.com/InventivetalentDev/minecraft-assets/blob/1.21/assets/minecraft/lang/en_us.json)
-to the config and change its value to your liking.
-You can reload the config by using `/reload`. The text format is based on
-the [translated text format](https://minecraft.wiki/w/Raw_JSON_text_format#Translated_Text), and also supports
-the [QuickText Format](https://placeholders.pb4.eu/user/quicktext) for text formatting
+[translation key](https://github.com/InventivetalentDev/minecraft-assets/blob/26.1/assets/minecraft/lang/en_us.json)
+to the config and change its value to your liking. The text format is based on
+the [translated text format](https://minecraft.wiki/w/Raw_JSON_text_format#Translated_Text)
+and also supports the [QuickText Format](https://placeholders.pb4.eu/user/quicktext) for text formatting
 and global [placeholders](https://placeholders.pb4.eu/user/default-placeholders/).
+You can reload the config with `/reload`.
 
 The format for placeholders is `${placeholder}` and for most messages you can only use placeholders that do NOT depend
 on a player/entity! So `${server:tps}` and `${world:name}` (overworld) are perfectly fine, but `${player:name}` will
@@ -41,9 +39,9 @@ not always work.
 *For more information, see [Placeholder Contexts](#placeholder-contexts).*
 
 The config format is compatible with the Minecraft language file format. So you could simply replace the config with a
-language file (strongly discouraged) and it would work fine. Note, however, that this would NOT overwrite the language
-setting of the players! For reference, you can find a list of all language files currently
-available [here](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21/assets/minecraft/lang).
+language file (strongly discouraged) and it would work just fine. Note, however, that this would NOT overwrite the
+language setting of the players! For reference, you can find a list of all language files currently available
+[here](https://github.com/InventivetalentDev/minecraft-assets/tree/26.1/assets/minecraft/lang).
 
 > [!NOTE]  
 > Any other mod that modifies server messages (e.g. [BanHammer](https://modrinth.com/mod/banhammer)), will most
@@ -88,29 +86,28 @@ see [here](https://github.com/arvitus/ServerMessages/blob/main/src/main/resource
 
 ### Placeholder Contexts
 
-*Contexts are additional information that allows different placeholders to work. For example, some mods like AfkPlus
+Contexts are additional information that allows different placeholders to work. For example, some mods like AfkPlus
 require the `player` context for their placeholders to work. This may not always be available in every message,
-so please check the additional contexts of your desired message in the list below.*
+so please check the additional contexts of your desired message in the list below.
 
 All messages support the basic contexts, meaning
-the [Server](https://placeholders.pb4.eu/user/default-placeholders/#server) and
-the [Overworld](https://placeholders.pb4.eu/user/default-placeholders/#world), but NOT
-the [Player](https://placeholders.pb4.eu/user/default-placeholders/#player).
-Some messages support additional contexts. See the list below.
+the [Server](https://placeholders.pb4.eu/user/default-placeholders/#server)
+and the [Overworld](https://placeholders.pb4.eu/user/default-placeholders/#world),
+but NOT the [Player](https://placeholders.pb4.eu/user/default-placeholders/#player).
 
-| Translation Key(s)                       | Extra Context |
-|------------------------------------------|:-------------:|
-| `chat.type.advancement.*`                |   `player`    |
-| `commands.kick.success`                  |   `player`    |
-| `death.*`                                |   `player`    |
-| `multiplayer.disconnect.banned.*`        |   `profile`   |
-| `multiplayer.disconnect.banned_ip.*`     |   `profile`   |
-| `multiplayer.disconnect.not_whitelisted` |   `profile`   |
-| `multiplayer.disconnect.kicked`          |   `player`    |
-| `multiplayer.disconnect.server_shutdown` |   `player`    |
-| `multiplayer.player.joined`              |   `player`    |
-| `multiplayer.player.joined.renamed`      |   `player`    |
-| `multiplayer.player.left`                |   `player`    |
+| Translation Key(s)                       |  Context  |
+|------------------------------------------|:---------:|
+| `chat.type.advancement.*`                | `player`  |
+| `commands.kick.success`                  | `player`  |
+| `death.*`                                | `player`  |
+| `multiplayer.disconnect.banned.*`        | `profile` |
+| `multiplayer.disconnect.banned_ip.*`     | `profile` |
+| `multiplayer.disconnect.not_whitelisted` | `profile` |
+| `multiplayer.disconnect.kicked`          | `player`  |
+| `multiplayer.disconnect.server_shutdown` | `player`  |
+| `multiplayer.player.joined`              | `player`  |
+| `multiplayer.player.joined.renamed`      | `player`  |
+| `multiplayer.player.left`                | `player`  |
 
 > If you want a specific context added, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new) or
 > [tell me on Discord](https://discord.gg/xzdbetZVrn).
@@ -136,10 +133,11 @@ sent to the player. This way the player receives your custom message instead of 
 necessarily affect the translation of the messages. So you can add formatting to messages without losing the
 auto translation feature (see [example config](#example-config)).
 
-Any translation keys used in your custom messages will use the default values/formatting, NOT the values you
-provided. This is necessary to prevent infinite recursion.
+To prevent infinite recursion, all translation keys used in your custom messages will have their default values and
+formatting, **not** the values you provided.
 
 ---
-**[ ¹ ]:** *There are some special cases where it might not work as expected due to how Minecraft handles certain
-messages. If you encounter one of those, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new),
+<b id="f1">[[ 1 ]](#a1):</b> *There are some special cases where it might not work as expected due to how Minecraft
+handles certain messages.
+If you encounter one of those, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new),
 and I'll see what can be done to make them work too.*

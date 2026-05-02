@@ -16,24 +16,8 @@ public class ServerMessages implements ModInitializer {
     public static final String MOD_ID = "servermessages";
     public static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve(MOD_ID);
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final ContextStore CONTEXT_STORE = new ContextStore();
     @Nullable
     public static MinecraftServer SERVER;
-    private static boolean enabled = true;
-
-    public static boolean isEnabled() {
-        return enabled;
-    }
-
-    public static void withDisabled(Runnable r) {
-        var wasEnabled = enabled;
-        enabled = false;
-        try {
-            r.run();
-        } finally {
-            enabled = wasEnabled;
-        }
-    }
 
     @Override
     public void onInitialize() {

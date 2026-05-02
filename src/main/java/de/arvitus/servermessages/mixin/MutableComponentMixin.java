@@ -1,12 +1,9 @@
 package de.arvitus.servermessages.mixin;
 
-import de.arvitus.servermessages.Config;
-import de.arvitus.servermessages.ServerMessages;
-import eu.pb4.placeholders.api.ParserContext;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import de.arvitus.servermessages.interfaces.IParseable;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
-import eu.pb4.placeholders.api.node.TextNode;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -16,9 +13,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,17 +29,27 @@ public class MutableComponentMixin implements IParseable {
     @Unique
     private MutableComponent original;
 
-    @Inject(method = "create", at = @At("HEAD"), cancellable = true)
-    private static void replaceCustomTranslations(
-        ComponentContents content,
-        CallbackInfoReturnable<MutableComponent> cir
+    @WrapMethod(
+        method = "create"
+    )
+    private static MutableComponent parseTranslatable(
+        ComponentContents contents,
+        Operation<MutableComponent> original
     ) {
+        var component = original.call(contents);
         if (
-            !ServerMessages.isEnabled() ||
-            parsing ||
-            !(content instanceof TranslatableContents translatable) ||
-            !Config.contains(translatable.getKey())
-        ) return;
+            contents instanceof TranslatableContents translatable
+            && !parsing.contains(translatable.getKey())
+            && translatable.servermessages$canParse()
+        ) {
+            parsing.add(translatable.getKey());
+            var newComponent = contents.servermessages$parse();
+            parsing.remove(translatable.getKey());
+            newComponent.servermessages$setOriginal(component);
+            return newComponent;
+        }
+        return component;
+    }
 
     @Override
     public @Nullable ServerPlaceholderContext servermessages$getContext() {

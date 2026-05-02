@@ -1,19 +1,16 @@
 package de.arvitus.servermessages.mixin.context.deaths;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
-    @Inject(
+    @WrapOperation(
         method = "lambda$die$0",
         at = @At(
             value = "INVOKE",
@@ -21,7 +18,12 @@ public abstract class ServerPlayerMixin {
                      "Lnet/minecraft/network/chat/MutableComponent;"
         )
     )
-    private void setExceptionalDeathContext(Component text, CallbackInfoReturnable<Packet<?>> cir) {
-        CONTEXT_STORE.put("death.attack", ServerPlaceholderContext.of((ServerPlayer) (Object) this));
+    private MutableComponent replaceExceptionalDeathMessage(
+        String key,
+        Object[] args,
+        Operation<MutableComponent> original
+    ) {
+        var component = original.call(key, args);
+        return component.servermessages$parse(ServerPlaceholderContext.of((ServerPlayer) (Object) this));
     }
 }

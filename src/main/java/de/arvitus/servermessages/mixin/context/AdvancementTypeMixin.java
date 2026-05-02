@@ -1,25 +1,25 @@
 package de.arvitus.servermessages.mixin.context;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 
 @Mixin(AdvancementType.class)
 public abstract class AdvancementTypeMixin {
-    @Inject(method = "createAnnouncement", at = @At("HEAD"))
-    private void setAdvancementContext(
-        AdvancementHolder advancementEntry,
+    @WrapMethod(
+        method = "createAnnouncement"
+    )
+    private MutableComponent replaceAnnouncementMessage(
+        AdvancementHolder holder,
         ServerPlayer player,
-        CallbackInfoReturnable<MutableComponent> cir
+        Operation<MutableComponent> original
     ) {
-        CONTEXT_STORE.put("chat.type.advancement", ServerPlaceholderContext.of(player));
+        var component = original.call(holder, player);
+        return component.servermessages$parse(ServerPlaceholderContext.of(player));
     }
 }

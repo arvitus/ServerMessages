@@ -6,10 +6,10 @@
   "mixins": [
     "ComponentContentsMixin",
     "MutableComponentMixin",
+    "ServerLoginPacketListenerImplMixin",
     "TranslatableContentsMixin",
     "context.AdvancementTypeMixin",
     "context.ConnectionMixin",
-    "context.MinecraftServerMixin",
     "context.PlayerListMixin",
     "context.ServerGamePacketListenerImplMixin",
     "context.commands.KickCommand",

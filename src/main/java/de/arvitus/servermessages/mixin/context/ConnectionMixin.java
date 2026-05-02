@@ -1,48 +1,88 @@
 package de.arvitus.servermessages.mixin.context;
 
-import com.google.common.net.InetAddresses;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import de.arvitus.servermessages.ServerMessages;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
-import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelFutureListener;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContextProvider;
 import net.minecraft.network.Connection;
+import net.minecraft.network.DisconnectionDetails;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
+import net.minecraft.network.protocol.game.ClientboundDisguisedChatPacket;
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
+import net.minecraft.network.protocol.login.ClientboundLoginDisconnectPacket;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.util.List;
-
-import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
-import static de.arvitus.servermessages.ServerMessages.SERVER;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Connection.class)
 public abstract class ConnectionMixin {
-    @Shadow
-    private SocketAddress address;
-
-    @Inject(
-        method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;)" +
-                     "Lnet/minecraft/network/chat/MutableComponent;",
-            ordinal = 0
-        )
+    @WrapMethod(
+        method = "disconnect(Lnet/minecraft/network/DisconnectionDetails;)V"
     )
-    private void setDisconnectContext(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
-        if (SERVER == null) return;
+    private void setDisconnectionContext(DisconnectionDetails details, Operation<Void> original) {
+        var newReason = replaceTranslatable(details.reason());
+        if (newReason != details.reason())
+            details = new DisconnectionDetails(
+                newReason,
+                details.report(),
+                details.bugReportLink()
+            );
 
-        String ip = this.address instanceof InetSocketAddress inetSocketAddress
-            ? InetAddresses.toAddrString(inetSocketAddress.getAddress())
-            : "<unknown>";
+        original.call(details);
+    }
 
-        List<ServerPlayer> players = SERVER.getPlayerList().getPlayersWithAddress(ip);
-        if (players.isEmpty()) return;
+    @WrapMethod(
+        method = "sendPacket"
+    )
+    private void setPacketContext(
+        Packet<?> packet,
+        @Nullable ChannelFutureListener listener,
+        boolean flush,
+        Operation<Void> original
+    ) {
+        var component = switch (packet) {
+            case ClientboundDisconnectPacket p -> p.reason();
+            case ClientboundLoginDisconnectPacket p -> p.reason();
+            case ClientboundSystemChatPacket p -> p.content();
+            case ClientboundDisguisedChatPacket p -> p.message();
+            default -> null;
+        };
+        if (component == null || !component.getContents().servermessages$canParse()) {
+            original.call(packet, listener, flush);
+            return;
+        }
 
-        CONTEXT_STORE.put("multiplayer.disconnect.server_shutdown", ServerPlaceholderContext.of(players.getFirst()));
+        var newComponent = replaceTranslatable(component);
+        packet = switch (packet) {
+            case ClientboundDisconnectPacket _ -> new ClientboundDisconnectPacket(newComponent);
+            case ClientboundLoginDisconnectPacket _ -> new ClientboundLoginDisconnectPacket(newComponent);
+            case ClientboundSystemChatPacket p -> new ClientboundSystemChatPacket(newComponent, p.overlay());
+            case ClientboundDisguisedChatPacket p -> new ClientboundDisguisedChatPacket(newComponent, p.chatType());
+            default -> null;
+        };
+
+        original.call(packet, listener, flush);
+    }
+
+    @Unique
+    private Component replaceTranslatable(Component component) {
+        var contents = component.getContents();
+        if (!contents.servermessages$canParse()) return component;
+
+        var packetContext = ((PacketContextProvider) this).getPacketContext();
+        var gameProfile = packetContext.get(PacketContext.GAME_PROFILE);
+        var server = ServerMessages.SERVER;
+
+        if (server == null) return component;
+        if (gameProfile == null) return contents.servermessages$parse(ServerPlaceholderContext.of(server));
+
+        var player = server.getPlayerList().getPlayer(gameProfile.id());
+        if (player != null) return contents.servermessages$parse(ServerPlaceholderContext.of(player));
+        return contents.servermessages$parse(ServerPlaceholderContext.of(gameProfile, server));
     }
 }

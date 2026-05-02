@@ -3,12 +3,11 @@ package de.arvitus.servermessages.mixin.context.commands;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.brigadier.context.CommandContext;
-import de.arvitus.servermessages.ServerMessages;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,8 +15,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static de.arvitus.servermessages.ServerMessages.CONTEXT_STORE;
 
 @Mixin(net.minecraft.server.commands.KickCommand.class)
 public abstract class KickCommand {
@@ -35,6 +32,24 @@ public abstract class KickCommand {
     }
 
     @WrapOperation(
+        method = "lambda$kickPlayers$0",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;[Ljava/lang/Object;)" +
+                     "Lnet/minecraft/network/chat/MutableComponent;")
+    )
+    private static MutableComponent setFeedbackContext(
+        String key,
+        Object[] args,
+        Operation<MutableComponent> original,
+        @Local ServerPlayer player
+    ) {
+        var component = original.call(key, args);
+        component.servermessages$setContext(ServerPlaceholderContext.of(player));
+        return component;
+    }
+
+    @WrapOperation(
         method = "kickPlayers",
         at = @At(
             value = "INVOKE",
@@ -42,23 +57,18 @@ public abstract class KickCommand {
                      "(Lnet/minecraft/network/chat/Component;)V"
         )
     )
-    private static void setKickContext(
+    private static void replaceKickReason(
         ServerGamePacketListenerImpl instance,
         Component component,
-        Operation<Void> original,
-        @Local ServerPlayer player,
-        @Local(argsOnly = true) LocalRef<Component> reasonRef
+        Operation<Void> original
     ) {
-        ServerPlaceholderContext context = ServerPlaceholderContext.of(player);
-        CONTEXT_STORE.put("commands.kick.success", context);
-
-        CONTEXT_STORE.put("multiplayer.disconnect.kicked", context);
-        if (!hasReason) {
-            original.call(instance, Component.translatable("multiplayer.disconnect.kicked"));
-            ServerMessages.withDisabled(() -> reasonRef.set(Component.translatable("multiplayer.disconnect.kicked")));
-        } else original.call(
-            instance,
-            Component.translatableWithFallback("multiplayer.disconnect.kicked.reason", "%s", component)
-        );
+        component = hasReason ?
+            Component.translatableWithFallback(
+                "multiplayer.disconnect.kicked.reason",
+                "%s",
+                component
+            )
+            : component;
+        original.call(instance, component);
     }
 }

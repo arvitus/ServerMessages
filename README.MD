@@ -97,19 +97,15 @@ the [Server](https://placeholders.pb4.eu/user/default-placeholders/#server)
 and the [Overworld](https://placeholders.pb4.eu/user/default-placeholders/#world),
 but NOT the [Player](https://placeholders.pb4.eu/user/default-placeholders/#player).
 
-| Translation Key(s)                       |  Context  |
-|------------------------------------------|:---------:|
-| `chat.type.advancement.*`                | `player`  |
-| `commands.kick.success`                  | `player`  |
-| `death.*`                                | `player`  |
-| `multiplayer.disconnect.banned.*`        | `profile` |
-| `multiplayer.disconnect.banned_ip.*`     | `profile` |
-| `multiplayer.disconnect.not_whitelisted` | `profile` |
-| `multiplayer.disconnect.kicked`          | `player`  |
-| `multiplayer.disconnect.server_shutdown` | `player`  |
-| `multiplayer.player.joined`              | `player`  |
-| `multiplayer.player.joined.renamed`      | `player`  |
-| `multiplayer.player.left`                | `player`  |
+| Translation Key(s)                  |                                                                                                                             Context                                                                                                                             |
+|-------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| `chat.type.advancement.*`           |                                                                                                                            `player`                                                                                                                             |
+| `commands.kick.success`             |                                                                                                                            `player`                                                                                                                             |
+| `death.*`                           |                                                                                                                            `player`                                                                                                                             |
+| `multiplayer.disconnect.*`          | `player` if the player was already on the server before the disconnect, otherwise `profile`.<br/><br/>**Exceptions (non-exhaustive list)**<br/>`.transfers_disabled`, `.outdated_client`, `.incompatible`<br/>*These only have the default context (`server`).* |
+| `multiplayer.player.joined`         |                                                                                                                            `player`                                                                                                                             |
+| `multiplayer.player.joined.renamed` |                                                                                                                            `player`                                                                                                                             |
+| `multiplayer.player.left`           |                                                                                                                            `player`                                                                                                                             |
 
 > If you want a specific context added, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new) or
 > [tell me on Discord](https://discord.gg/xzdbetZVrn).

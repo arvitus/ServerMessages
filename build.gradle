@@ -33,6 +33,10 @@ dependencies {
     include implementation("eu.pb4:placeholder-api:${project.placeholder_api_version}")
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/${project.mod_id}.classtweaker")
+}
+
 processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", project.minecraft_version

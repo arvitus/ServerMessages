@@ -4,7 +4,9 @@
   "package": "de.arvitus.servermessages.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "ComponentContentsMixin",
     "MutableComponentMixin",
+    "TranslatableContentsMixin",
     "context.AdvancementTypeMixin",
     "context.ConnectionMixin",
     "context.MinecraftServerMixin",

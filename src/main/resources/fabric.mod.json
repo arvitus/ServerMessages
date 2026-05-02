@@ -22,6 +22,7 @@
   "mixins": [
     "servermessages.mixins.json"
   ],
+  "accessWidener": "servermessages.classtweaker",
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",

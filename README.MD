@@ -23,6 +23,9 @@ Common use cases include changing the color of messages like "You have been bann
 not whitelisted" message or customizing the kick notification. You could even use the mod to display some stats when a
 player joins or leaves the server or make death messages appear in rainbow colors. The possibilities are endless!
 
+> [!NOTE]  
+> For anything chat related, I recommend using [Styled Chat](https://modrinth.com/mod/styled-chat) instead.
+
 ## How do I use it?
 
 To modify a message, you simply add the corresponding
@@ -150,4 +153,6 @@ formatting, **not** the values you provided.
 <b id="f1">[[ 1 ]](#a1):</b> *There are some special cases where it might not work as expected due to how Minecraft
 handles certain messages.
 If you encounter one of those, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new),
-and I'll see what can be done to make them work too.*
+and I'll see what can be done to make them work too.  
+**Player chat messages (also `/me`, etc.), unfortunately do NOT work.
+Use [Styled Chat](https://modrinth.com/mod/styled-chat) for these instead.***

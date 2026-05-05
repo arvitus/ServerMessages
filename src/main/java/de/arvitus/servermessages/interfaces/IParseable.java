@@ -28,14 +28,4 @@ public interface IParseable {
     default boolean servermessages$canParse() {
         throw new RuntimeException("Method not Implemented");
     }
-
-    default @Nullable MutableComponent servermessages$getOriginal() {
-        return null;
-    }
-
-    default void servermessages$setOriginal(@Nullable MutableComponent original) {}
-
-    default boolean servermessages$hasOriginal() {
-        return servermessages$getOriginal() != null;
-    }
 }

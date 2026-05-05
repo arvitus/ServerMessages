@@ -2,6 +2,7 @@ package de.arvitus.servermessages.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import de.arvitus.servermessages.interfaces.IMutableComponent;
 import de.arvitus.servermessages.interfaces.IParseable;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.network.chat.ComponentContents;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(MutableComponent.class)
-public class MutableComponentMixin implements IParseable {
+public class MutableComponentMixin implements IParseable, IMutableComponent {
     @Unique
     private static final List<String> parsing = new ArrayList<>();
     @Shadow

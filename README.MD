@@ -137,7 +137,7 @@ but NOT the [Player](https://placeholders.pb4.eu/user/default-placeholders/#play
 This mod also adds some additional translation keys for use in the config.
 They will let you customize some messages that you normally would not be able to change.
 
-> [!NOTE]
+> [!NOTE]  
 > These translation keys are **not** provided by Minecraft itself and **only** work when specified in the mod config.
 
 | Translation Key                        | Context  | Notes                                                                                                                                                                                                                                                                          | Default | Version Added |

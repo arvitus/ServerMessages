@@ -13,7 +13,7 @@
     "context.ConnectionMixin",
     "context.PlayerListMixin",
     "context.ServerGamePacketListenerImplMixin",
-    "context.commands.KickCommand",
+    "context.commands.KickCommandMixin",
     "context.deaths.CombatTrackerMixin",
     "context.deaths.DamageSourceMixin",
     "context.deaths.ServerPlayerMixin"

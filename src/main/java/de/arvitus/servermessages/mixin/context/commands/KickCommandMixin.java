@@ -11,6 +11,7 @@ import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.server.commands.KickCommand;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,8 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(net.minecraft.server.commands.KickCommand.class)
-public abstract class KickCommand {
+@Mixin(KickCommand.class)
+public abstract class KickCommandMixin {
     @Unique
     private static boolean hasReason = false;
 

@@ -2,9 +2,9 @@ package de.arvitus.servermessages.mixin.context.deaths;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import de.arvitus.servermessages.ServerMessages;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class DamageSourceMixin {
     @WrapMethod(method = "getLocalizedDeathMessage")
     private Component setDeathContext(LivingEntity victim, Operation<Component> original) {
-        var component = (MutableComponent) original.call(victim);
-        return component.servermessages$parse(ServerPlaceholderContext.of(victim));
+        return ServerMessages.withContext(ServerPlaceholderContext.of(victim), () -> original.call(victim));
     }
 }

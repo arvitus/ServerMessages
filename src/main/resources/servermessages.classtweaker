@@ -1,5 +1,5 @@
 classTweaker  v1  official
-inject-interface  net/minecraft/network/chat/MutableComponent  de/arvitus/servermessages/interfaces/IParseable
 inject-interface  net/minecraft/network/chat/contents/TranslatableContents  de/arvitus/servermessages/interfaces/IParseable
 inject-interface  net/minecraft/network/chat/ComponentContents  de/arvitus/servermessages/interfaces/IParseable
-inject-interface  net/minecraft/network/chat/MutableComponent  de/arvitus/servermessages/interfaces/IMutableComponent
+inject-interface  net/minecraft/network/chat/MutableComponent  de/arvitus/servermessages/interfaces/IComponent
+inject-interface  net/minecraft/network/chat/Component  de/arvitus/servermessages/interfaces/IComponent

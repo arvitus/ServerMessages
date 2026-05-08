@@ -1,13 +1,16 @@
 package de.arvitus.servermessages.mixin.context.commands;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.brigadier.context.CommandContext;
+import de.arvitus.servermessages.ServerMessages;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,22 +34,9 @@ public abstract class KickCommand {
         hasReason = true;
     }
 
-    @WrapOperation(
-        method = "lambda$kickPlayers$0",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;[Ljava/lang/Object;)" +
-                     "Lnet/minecraft/network/chat/MutableComponent;")
-    )
-    private static MutableComponent setFeedbackContext(
-        String key,
-        Object[] args,
-        Operation<MutableComponent> original,
-        @Local ServerPlayer player
-    ) {
-        var component = original.call(key, args);
-        component.servermessages$setContext(ServerPlaceholderContext.of(player));
-        return component;
+    @WrapMethod(method = "lambda$kickPlayers$0")
+    private static Component setFeedbackContext(ServerPlayer player, Component reason, Operation<Component> original) {
+        return ServerMessages.withContext(ServerPlaceholderContext.of(player), original::call);
     }
 
     @WrapOperation(
@@ -60,15 +50,14 @@ public abstract class KickCommand {
     private static void replaceKickReason(
         ServerGamePacketListenerImpl instance,
         Component component,
-        Operation<Void> original
+        Operation<Void> original,
+        @Local(argsOnly = true) LocalRef<Component> reasonRef
     ) {
-        component = hasReason ?
-            Component.translatableWithFallback(
-                "multiplayer.disconnect.kicked.reason",
-                "%s",
-                component
-            )
-            : component;
+        var contents = hasReason
+            ? new TranslatableContents("multiplayer.disconnect.kicked.reason", "%s", new Component[]{component})
+            : component.servermessages$getOriginal();
+        component = ServerMessages.parseWithContext(ServerPlaceholderContext.of(instance.getPlayer()), contents);
         original.call(instance, component);
+        if (!hasReason) reasonRef.set(component);
     }
 }

@@ -2,30 +2,22 @@ package de.arvitus.servermessages.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import de.arvitus.servermessages.interfaces.IMutableComponent;
-import de.arvitus.servermessages.interfaces.IParseable;
+import de.arvitus.servermessages.ServerMessages;
+import de.arvitus.servermessages.interfaces.IComponent;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(MutableComponent.class)
-public class MutableComponentMixin implements IParseable, IMutableComponent {
+public class MutableComponentMixin implements IComponent {
     @Unique
-    @Shadow
-    @Final
-    private ComponentContents contents;
-    @Shadow
-    private Style style;
     private static boolean parsing = false;
     @Unique
-    private MutableComponent original;
+    private ComponentContents original;
 
     @WrapMethod(
         method = "create"
@@ -35,56 +27,31 @@ public class MutableComponentMixin implements IParseable, IMutableComponent {
         Operation<MutableComponent> original
     ) {
         var component = original.call(contents);
+
+        ServerPlaceholderContext context;
         if (
             contents instanceof TranslatableContents translatable
             && !parsing
             && translatable.servermessages$canParse()
+            && (context = ServerMessages.getContext()) != null
         ) {
-            var newComponent = contents.servermessages$parse();
-            newComponent.servermessages$setOriginal(component);
             parsing = true;
+            var newComponent = translatable.servermessages$parse(context);
             parsing = false;
+            newComponent.servermessages$setOriginal(translatable);
             return newComponent;
         }
+
         return component;
     }
 
     @Override
-    public @Nullable ServerPlaceholderContext servermessages$getContext() {
-        return getParsingTarget().servermessages$getContext();
-    }
-
-    @Override
-    public void servermessages$setContext(ServerPlaceholderContext context) {
-        getParsingTarget().servermessages$setContext(context);
-    }
-
-    @Override
-    public MutableComponent servermessages$parse(@Nullable ServerPlaceholderContext context) {
-        if (!servermessages$canParse()) return (MutableComponent) (Object) this;
-        var component = getParsingTarget().servermessages$parse(context);
-        component.servermessages$setOriginal(this.original != null ? this.original : (MutableComponent) (Object) this);
-        return component.withStyle(component.getStyle().applyTo(style));
-    }
-
-    @Override
-    public boolean servermessages$canParse() {
-        return getParsingTarget().servermessages$canParse();
-    }
-
-    @Unique
-    private IParseable getParsingTarget() {
-        if (this.original != null) return this.original;
-        return contents;
-    }
-
-    @Override
-    public @Nullable MutableComponent servermessages$getOriginal() {
+    public @Nullable ComponentContents servermessages$getOriginal() {
         return original;
     }
 
     @Override
-    public void servermessages$setOriginal(@Nullable MutableComponent original) {
+    public void servermessages$setOriginal(@Nullable ComponentContents original) {
         this.original = original;
     }
 }

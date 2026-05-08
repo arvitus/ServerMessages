@@ -10,14 +10,6 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(ComponentContents.class)
 public interface ComponentContentsMixin extends IParseable {
     @Override
-    default @Nullable ServerPlaceholderContext servermessages$getContext() {
-        return null;
-    }
-
-    @Override
-    default void servermessages$setContext(ServerPlaceholderContext context) {}
-
-    @Override
     default boolean servermessages$canParse() {
         return false;
     }

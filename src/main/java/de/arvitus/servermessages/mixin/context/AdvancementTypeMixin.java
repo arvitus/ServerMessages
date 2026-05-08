@@ -2,6 +2,7 @@ package de.arvitus.servermessages.mixin.context;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import de.arvitus.servermessages.ServerMessages;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -19,7 +20,6 @@ public abstract class AdvancementTypeMixin {
         ServerPlayer player,
         Operation<MutableComponent> original
     ) {
-        var component = original.call(holder, player);
-        return component.servermessages$parse(ServerPlaceholderContext.of(player));
+        return ServerMessages.withContext(ServerPlaceholderContext.of(player), () -> original.call(holder, player));
     }
 }

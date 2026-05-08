@@ -45,7 +45,7 @@ public class TranslatableContentsMixin implements IParseable {
 
     @Override
     public MutableComponent servermessages$parse(@Nullable ServerPlaceholderContext context) {
-        if (context == null || !servermessages$canParse())
+        if (context == null || !Config.contains(key))
             return MutableComponent.create((TranslatableContents) (Object) this);
 
         TextNode node = Objects.requireNonNull(Config.get(key)).textNode();

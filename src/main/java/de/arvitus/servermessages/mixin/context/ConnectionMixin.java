@@ -71,18 +71,19 @@ public abstract class ConnectionMixin {
 
     @Unique
     private Component replaceTranslatable(Component component) {
-        var contents = component.getContents();
-        if (!contents.servermessages$canParse()) return component;
+        var original = component.servermessages$getOriginal();
+        if (original == null || !original.servermessages$canParse()) return component;
 
         var packetContext = ((PacketContextProvider) this).getPacketContext();
         var gameProfile = packetContext.get(PacketContext.GAME_PROFILE);
         var server = ServerMessages.SERVER;
 
         if (server == null) return component;
-        if (gameProfile == null) return contents.servermessages$parse(ServerPlaceholderContext.of(server));
+        if (gameProfile == null) return ServerMessages.parseWithContext(ServerPlaceholderContext.of(server), original);
 
         var player = server.getPlayerList().getPlayer(gameProfile.id());
-        if (player != null) return contents.servermessages$parse(ServerPlaceholderContext.of(player));
-        return contents.servermessages$parse(ServerPlaceholderContext.of(gameProfile, server));
+        if (player != null) return ServerMessages.parseWithContext(ServerPlaceholderContext.of(player), original);
+
+        return ServerMessages.parseWithContext(ServerPlaceholderContext.of(gameProfile, server), original);
     }
 }

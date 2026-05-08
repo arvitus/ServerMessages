@@ -54,6 +54,8 @@ public class ServerMessages implements ModInitializer {
             );
         });
 
+        PlaceholderAPITags.register();
+
         ServerLifecycleEvents.SERVER_STARTED.register(server -> SERVER = server);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> SERVER = null);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> Config.load());

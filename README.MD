@@ -48,6 +48,18 @@ language file (strongly discouraged) and it would work just fine. Note, however,
 language setting of the players! For reference, you can find a list of all language files currently available
 [here](https://github.com/InventivetalentDev/minecraft-assets/tree/26.1/assets/minecraft/lang).
 
+If you use translation keys manually
+([QuickText](https://placeholders.pb4.eu/user/quicktext) / [STF](https://placeholders.pb4.eu/user/text-format)
+or [Text components](https://minecraft.wiki/w/Text_component_format)), for example in chat messages or other mods,
+they will also be affected by this mod and thus use the same formatting as specified in the config.
+If you do not want this, you can either append `r` or `raw` to the
+[QuickText](https://placeholders.pb4.eu/user/quicktext/#translations)
+/ [STF](https://placeholders.pb4.eu/user/text-format/#translations)
+translation tags (`<lang ...>` -> `<rlang ...>`), or add `#raw` as the **last** argument to the translation arguments.  
+*For example, `<rawlang ...>` is the same as `<lang ... #raw>` and will prevent the message from being modified.
+For [Text components](https://minecraft.wiki/w/Text_component_format#Translated_Text), it would look like this:
+`{"translate": "...", "with": [..., "#raw"]}`.*
+
 > [!NOTE]  
 > Any other mod that modifies server messages (e.g. [BanHammer](https://modrinth.com/mod/banhammer)), will most
 > certainly take precedence over changes made by this mod.

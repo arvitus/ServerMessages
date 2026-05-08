@@ -173,5 +173,5 @@ formatting, **not** the values you provided.
 handles certain messages.
 If you encounter one of those, please [open an issue](https://github.com/arvitus/ServerMessages/issues/new),
 and I'll see what can be done to make them work too.  
-**Player chat messages (also `/me`, etc.), unfortunately do NOT work.
+**Player chat messages (also `/me`, etc.), unfortunately are not supported by this mod.
 Use [Styled Chat](https://modrinth.com/mod/styled-chat) for these instead.***

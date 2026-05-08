@@ -16,6 +16,11 @@ public interface ComponentContentsMixin extends IParseable {
 
     @Override
     default MutableComponent servermessages$parse(@Nullable ServerPlaceholderContext context) {
+        return servermessages$parseRaw();
+    }
+
+    @Override
+    default MutableComponent servermessages$parseRaw() {
         return MutableComponent.create((ComponentContents) this);
     }
 }

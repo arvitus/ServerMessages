@@ -91,6 +91,12 @@ public class TranslatableContentsMixin implements IParseable {
 
         return component;
     }
+    
+    @Override
+    public MutableComponent servermessages$parseRaw() {
+        this.isRaw = true;
+        return MutableComponent.create((TranslatableContents) (Object) this);
+    }
 
     @Override
     public boolean servermessages$canParse() {

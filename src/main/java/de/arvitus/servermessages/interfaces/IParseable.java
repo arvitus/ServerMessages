@@ -9,6 +9,10 @@ public interface IParseable {
         throw new RuntimeException("Method not Implemented");
     }
 
+    default MutableComponent servermessages$parseRaw() {
+        throw new RuntimeException("Method not Implemented");
+    }
+
     default boolean servermessages$canParse() {
         throw new RuntimeException("Method not Implemented");
     }

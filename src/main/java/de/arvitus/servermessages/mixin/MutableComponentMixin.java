@@ -3,6 +3,7 @@ package de.arvitus.servermessages.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import de.arvitus.servermessages.ServerMessages;
+import de.arvitus.servermessages.StyledChat;
 import de.arvitus.servermessages.interfaces.IComponent;
 import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.minecraft.network.chat.ComponentContents;
@@ -32,6 +33,7 @@ public class MutableComponentMixin implements IComponent {
         if (
             contents instanceof TranslatableContents translatable
             && !parsing
+            && !StyledChat.isDuplicate(translatable)
             && translatable.servermessages$canParse()
             && (context = ServerMessages.getContext()) != null
         ) {

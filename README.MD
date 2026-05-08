@@ -25,6 +25,8 @@ player joins or leaves the server or make death messages appear in rainbow color
 
 > [!NOTE]  
 > For anything chat related, I recommend using [Styled Chat](https://modrinth.com/mod/styled-chat) instead.
+> If you do, all related messages in this mod will be disabled to prevent conflicts.
+> You can then change them using Styled Chat.
 
 ## How do I use it?
 

@@ -12,8 +12,6 @@ import net.minecraft.network.DisconnectionDetails;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
-import net.minecraft.network.protocol.game.ClientboundDisguisedChatPacket;
-import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.login.ClientboundLoginDisconnectPacket;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,8 +46,6 @@ public abstract class ConnectionMixin {
         var component = switch (packet) {
             case ClientboundDisconnectPacket p -> p.reason();
             case ClientboundLoginDisconnectPacket p -> p.reason();
-            case ClientboundSystemChatPacket p -> p.content();
-            case ClientboundDisguisedChatPacket p -> p.message();
             default -> null;
         };
         if (component == null || !component.getContents().servermessages$canParse()) {
@@ -61,8 +57,6 @@ public abstract class ConnectionMixin {
         packet = switch (packet) {
             case ClientboundDisconnectPacket _ -> new ClientboundDisconnectPacket(newComponent);
             case ClientboundLoginDisconnectPacket _ -> new ClientboundLoginDisconnectPacket(newComponent);
-            case ClientboundSystemChatPacket p -> new ClientboundSystemChatPacket(newComponent, p.overlay());
-            case ClientboundDisguisedChatPacket p -> new ClientboundDisguisedChatPacket(newComponent, p.chatType());
             default -> null;
         };
 

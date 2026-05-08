@@ -13,7 +13,12 @@
     "context.ConnectionMixin",
     "context.PlayerListMixin",
     "context.ServerGamePacketListenerImplMixin",
+    "context.commands.BanIpCommandsMixin",
+    "context.commands.BanPlayerCommandsMixin",
+    "context.commands.DeOpCommandsMixin",
     "context.commands.KickCommandMixin",
+    "context.commands.OpCommandMixin",
+    "context.commands.PardonCommandMixin",
     "context.deaths.CombatTrackerMixin",
     "context.deaths.DamageSourceMixin",
     "context.deaths.ServerPlayerMixin"

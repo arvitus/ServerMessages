@@ -37,7 +37,7 @@ public abstract class KickCommandMixin {
 
     @WrapMethod(method = "lambda$kickPlayers$0")
     private static Component setFeedbackContext(ServerPlayer player, Component reason, Operation<Component> original) {
-        return ServerMessages.withContext(ServerPlaceholderContext.of(player), original::call);
+        return ServerMessages.withContext(ServerPlaceholderContext.of(player), () -> original.call(player, reason));
     }
 
     @WrapOperation(

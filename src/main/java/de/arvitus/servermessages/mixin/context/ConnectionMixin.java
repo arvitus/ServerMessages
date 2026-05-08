@@ -48,12 +48,13 @@ public abstract class ConnectionMixin {
             case ClientboundLoginDisconnectPacket p -> p.reason();
             default -> null;
         };
-        if (component == null || !component.getContents().servermessages$canParse()) {
+
+        Component newComponent;
+        if (component == null || (newComponent = replaceTranslatable(component)) == component) {
             original.call(packet, listener, flush);
             return;
         }
 
-        var newComponent = replaceTranslatable(component);
         packet = switch (packet) {
             case ClientboundDisconnectPacket _ -> new ClientboundDisconnectPacket(newComponent);
             case ClientboundLoginDisconnectPacket _ -> new ClientboundLoginDisconnectPacket(newComponent);

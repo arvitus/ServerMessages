@@ -11,36 +11,56 @@ import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.util.CommonColors;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static de.arvitus.servermessages.PlaceholderAPITags.RAW_KEY;
 import static de.arvitus.servermessages.ServerMessages.LOGGER;
 
 @Mixin(TranslatableContents.class)
 public class TranslatableContentsMixin implements IParseable {
+    @Unique
+    private boolean isRaw = false;
     @Shadow
     @Final
     private String key;
     @Shadow
     @Final
+    @Mutable
     private Object[] args;
-    @Unique
-    private @Nullable ServerPlaceholderContext context;
 
-    @Override
-    public @Nullable ServerPlaceholderContext servermessages$getContext() {
-        return context;
-    }
-
-    @Override
-    public void servermessages$setContext(ServerPlaceholderContext context) {
-        this.context = context;
+    @ModifyVariable(
+        method = "<init>",
+        at = @At(
+            value = "FIELD",
+            target = "Lnet/minecraft/network/chat/contents/TranslatableContents;args:[Ljava/lang/Object;",
+            opcode = Opcodes.PUTFIELD,
+            shift = At.Shift.BEFORE
+        ),
+        argsOnly = true,
+        name = "args"
+    )
+    private Object[] setRawMode(Object[] args) {
+        if (args.length > 0) {
+            var lastArg = args[args.length - 1];
+            var value = switch (lastArg) {
+                case String s -> s;
+                case Component c when c.getContents() instanceof PlainTextContents t -> t.text();
+                default -> null;
+            };
+            if (Objects.equals(value, RAW_KEY)) {
+                isRaw = true;
+                args = Arrays.copyOf(args, args.length - 1);
+            }
+        }
+        return args;
     }
 
     @Override
@@ -74,18 +94,6 @@ public class TranslatableContentsMixin implements IParseable {
 
     @Override
     public boolean servermessages$canParse() {
-        if (!Config.contains(key)) return false;
-
-        if (args.length > 0) {
-            var lastArg = args[args.length - 1];
-            var value = switch (lastArg) {
-                case String s -> s;
-                case Component c when c.getContents() instanceof PlainTextContents t -> t.text();
-                default -> null;
-            };
-            return !Objects.equals(value, "#raw");
-        }
-
-        return true;
+        return !isRaw && Config.contains(key);
     }
 }

@@ -15,18 +15,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Mixin(MutableComponent.class)
 public class MutableComponentMixin implements IParseable, IMutableComponent {
     @Unique
-    private static final List<String> parsing = new ArrayList<>();
     @Shadow
     @Final
     private ComponentContents contents;
     @Shadow
     private Style style;
+    private static boolean parsing = false;
     @Unique
     private MutableComponent original;
 
@@ -40,13 +37,13 @@ public class MutableComponentMixin implements IParseable, IMutableComponent {
         var component = original.call(contents);
         if (
             contents instanceof TranslatableContents translatable
-            && !parsing.contains(translatable.getKey())
+            && !parsing
             && translatable.servermessages$canParse()
         ) {
-            parsing.add(translatable.getKey());
             var newComponent = contents.servermessages$parse();
-            parsing.remove(translatable.getKey());
             newComponent.servermessages$setOriginal(component);
+            parsing = true;
+            parsing = false;
             return newComponent;
         }
         return component;

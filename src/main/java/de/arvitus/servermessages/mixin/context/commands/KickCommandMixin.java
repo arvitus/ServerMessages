@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(KickCommand.class)
 public abstract class KickCommandMixin {
     @Unique
@@ -59,6 +61,6 @@ public abstract class KickCommandMixin {
             : component.servermessages$getOriginal();
         component = ServerMessages.parseWithContext(ServerPlaceholderContext.of(instance.getPlayer()), contents);
         original.call(instance, component);
-        if (!hasReason) reasonRef.set(component);
+        if (!hasReason) reasonRef.set(Objects.requireNonNull(contents).servermessages$parseRaw());
     }
 }

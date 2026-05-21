@@ -59,6 +59,7 @@ public abstract class KickCommandMixin {
         var contents = hasReason
             ? new TranslatableContents("multiplayer.disconnect.kicked.reason", "%s", new Component[]{component})
             : component.servermessages$getOriginal();
+        if (contents == null) contents = component.getContents();
         component = ServerMessages.parseWithContext(ServerPlaceholderContext.of(instance.getPlayer()), contents);
         original.call(instance, component);
         if (!hasReason) reasonRef.set(Objects.requireNonNull(contents).servermessages$parseRaw());

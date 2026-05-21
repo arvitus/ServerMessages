@@ -9,6 +9,7 @@ import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,10 @@ public class ServerMessages implements ModInitializer {
         return res;
     }
 
-    public static MutableComponent parseWithContext(ServerPlaceholderContext context, ComponentContents contents) {
+    public static MutableComponent parseWithContext(
+        ServerPlaceholderContext context,
+        @NotNull ComponentContents contents
+    ) {
         return withContext(context, () -> MutableComponent.create(contents));
     }
 
